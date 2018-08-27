@@ -1,14 +1,17 @@
 FROM php:7.1-fpm
 
-COPY librdkafka/ /tmp/librdkafka
+RUN mkdir /tmp/librdkafka/
 
-WORKDIR /tmp/librdkafka
+RUN curl -L https://github.com/edenhill/librdkafka/archive/v0.11.5.tar.gz --output /tmp/librdkafka/librdkafka.tar.gz
 
-RUN ./configure && \
-  make && \ 
-  make install
+RUN tar -xvf /tmp/librdkafka/librdkafka.tar.gz -C /tmp/librdkafka/
+
+RUN cd /tmp/librdkafka/$(ls /tmp/librdkafka/) && \
+    ./configure && \
+    make && \ 
+    make install
 
 RUN pecl install rdkafka
 RUN docker-php-ext-enable rdkafka
 
-RUN rm -rf /tmp/librdkafka
+RUN rm -rf /tmp/librdkafka/
