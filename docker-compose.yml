@@ -1,0 +1,17 @@
+version: '2'
+
+services:
+  kafka:
+    image: choopong/kafka:1.1.x.1
+    ports:
+      - '9092:9092'
+    volumes:
+      - ./kafka/config/server.properties:/app/kafka/config/server.properties
+      - ./kafka-logs/:/tmp/kafka-logs/
+
+  php:
+    image: choopong/php-rdkafka
+    stdin_open: true 
+    volumes:
+      - ./php/:/php/
+    working_dir: /php/
